@@ -1,12 +1,10 @@
 'use strict'
 var fs = require('fs');
 
-function render() {
-    //Render home page based on user auth
-    var auth = false;
-
+function render(user) {
+    
     //Render non-authenticated homepage
-    if (!auth) {
+    if (!user) {
 
         var header = fs.readFileSync('../Views/headerNoAuth.html', 'utf-8');
         var body = fs.readFileSync('../Views/discover.html', 'utf-8');

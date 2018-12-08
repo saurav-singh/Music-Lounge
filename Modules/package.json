@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "client-sessions": "^0.8.0",
     "express-fileupload": "^1.0.0",
-    "formidable": "^1.2.1"
+    "formidable": "^1.2.1",
+    "mysql": "^2.16.0"
   }
 }
