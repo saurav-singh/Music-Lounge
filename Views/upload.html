@@ -1,9 +1,14 @@
 <div class="container">
+    <div class="uploadBox">
 
-    <form action="/upload" enctype="multipart/form-data" method="post" id="musicForm">
-        <input type="text" name="title"><br>
-        <input type="file" name="upload" multiple="multiple"><br>
-        <button onclick="upload()">Upload</button>
-    </form>
+        <h3>Upload a valid mp3 audio file</h3>
 
+        <form class="ui form" action="/upload" enctype="multipart/form-data" method="post" id="musicForm">
+            <label>Song title</label>
+            <input type="text" name="title" placeholder="Song title">
+            <input type="file" name="upload" multiple="multiple"> <br>
+            <button class="ui orange fluid button" onclick="upload()">Upload</button>
+        </form>
+
+    </div>
 </div>

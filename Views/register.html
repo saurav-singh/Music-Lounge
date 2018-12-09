@@ -1,4 +1,29 @@
-<input id="username" type="text">
-<input id="password" type="password">
-<button onclick="register()">Register</button>
-<button onclick="switchAuth()"> Switch to Login</button>
+<div class="container">
+    <div class="loginBox">
+
+        <form class="ui form">
+            <h3> Register </h3>
+            <!-- Username field -->
+            <div class="field">
+                <label>Username</label>
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" id="username" placeholder="Username">
+                </div>
+            </div>
+            <!-- Password field -->
+            <div class="field">
+                <label>Password</label>
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+            </div>
+            <!-- Buttons -->
+            <button class="ui fluid orange button" onclick="login()" type="button">Register</button>
+            <div class="ui horizontal divider">OR</div>
+            <button class="ui fluid blue button" onclick="switchAuth()" type="button">Switch to Login</button>
+        </form>
+
+    </div>
+</div>

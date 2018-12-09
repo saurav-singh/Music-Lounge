@@ -2,24 +2,30 @@
 var loginPage = true;
 
 $(document).ready(function () {
-
     //Initial render
     render('/home');
-
 });
 
 function render(path) {
-
     $.ajax({
-        type: 'GET',
-        url: path
+        type: 'GET', url: path
     }).then(d => {
         $('#content').html(d);
         discoverMusic();
     });
+}
 
+function renderAuth(path) {
+    $.ajax({
+        type: 'GET', url: path
+    }).then(d => {
+        console.log(d);
+        $('#content').html(d);
+    });
+}
 
-
+function home() {
+    render('/home');
 }
 
 function discoverMusic() {
@@ -28,33 +34,38 @@ function discoverMusic() {
         url: '\discoverMusic'
     }).then(data => {
 
-        var list = '<ul>';
+        var list = '<table class=\'ui selectable table\'>';
+        list += '<thead><tr><th>Song Title</th><th> Artist </th>';
+        list += '<th class=\'right aligned\'></th></tr><tbody>';
 
         data.forEach(d => {
             var user = Object.keys(d)[0];
             var song = d[user];
             var id = song[song.length - 1];
-            song = song.slice(0, song.length - 4);
+            song = song.slice(0, song.length - 1);
 
-            list += '<li>';
-            list += song + ' -------- Artist: ' + user;
-            list += '<button onclick=playMusic(' + id + ')>Play</button>';
-            list += '</li>';
+            list += '<tr>';
+            list += '<td>' + song + '</td>';
+            list += '<td>' + user + '</td>';
+            list += '<td class=\'right aligned\'>';
+            list += '<div class=\'ui vertical labeled icon buttons\'>'
+            list += '<button class=\'ui orange button\' onclick=\'playMusic(' + id + ')\'><i class="play icon"></i>';
+            list += 'Play </button></div</td></tr>';
+
         });
 
-        list += '</ul>';
+        list += '</table>';
 
-        // $('#songList').html(list);
-        document.getElementById("songList").innerHTML = list;
+        $('#songList').html(list);
+        //document.getElementById("songList").innerHTML = list;
     });
 }
 
 function authPage() {
-
     if (loginPage)
-        render('/login');
+        renderAuth('/login');
     else
-        render('/register')
+        renderAuth('/register')
 }
 
 function switchAuth() {
@@ -130,7 +141,7 @@ function playMusic(q) {
         type: 'GET', url: '/getSongById?id=' + q
     }).then(d => {
         var player = "<audio controls autoplay id=player><source type=audio/mpeg";
-        player += " src=" + d + "> Not Supported... </audio>";
+        player += " src=\'" + d + "\'> Not Supported... </audio>";
         $('#nowPlaying').html(player);
     });
 }

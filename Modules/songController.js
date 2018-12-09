@@ -17,7 +17,7 @@ class SongController extends EventEmitter {
     populate() {
         var self = this;
         var userFiles = fs.readdirSync(this.songPath);
-        var id=1;
+        var id = 1;
 
         userFiles.forEach((d, i) => {
             //Create json array for every user
@@ -28,9 +28,9 @@ class SongController extends EventEmitter {
             //Insert song into their respective user's array
             songs.forEach(s => {
                 //Remove .mp3
-                s = s.slice(0,s.length-4);
+                s = s.slice(0, s.length - 4);
                 self.userSong[i][d].push(s)
-                self.songList.push({ [d]: s+id });
+                self.songList.push({ [d]: s + id });
                 id++;
             });
         });
@@ -48,7 +48,7 @@ class SongController extends EventEmitter {
         //Return array of songs by the user
         this.userSong.forEach((d) => {
             var usr = Object.keys(d)[0];
-            if(user == usr){
+            if (user == usr) {
                 list = d[user];
             }
         });
@@ -60,13 +60,13 @@ class SongController extends EventEmitter {
 
         var path = null;
 
-        for (var i in this.songList){
+        for (var i in this.songList) {
             var user = Object.keys(this.songList[i]);
             var song = this.songList[i][user];
-            var id2 = song[song.length-1];
-            if(id == id2){
-                song = song.slice(0,song.length-1)+'.mp3';
-                path = this.songPath+'/'+user+'/'+song;
+            var id2 = song[song.length - 1];
+            if (id == id2) {
+                song = song.slice(0, song.length - 1) + '.mp3';
+                path = this.songPath + '/' + user + '/' + song;
             }
         }
 
@@ -78,11 +78,22 @@ class SongController extends EventEmitter {
             return this.songList;
         else {
             var list = [];
-            for (var i = 0; i < 10; i++)
-                list.push(Math.floor(Math.random() * this.userSong.length));
+
+            while (list.length < 10) {
+                var r = Math.floor(Math.random() * this.songList.length);
+                if (!list.includes(r)) list.push(r);
+            }
+
             list = list.map(d => this.songList[d]);
+
             return list;
         }
+    }
+
+    refresh() {
+        this.userSong = [];
+        this.songList = [];
+        this.populate();
     }
 
 }

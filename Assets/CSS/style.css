@@ -1,9 +1,65 @@
+*{
+    overflow: auto;
+}
+div {
+    overflow: hidden;
+}
+
 .footer {
     position: fixed;
+    height: 60px;
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: red;
+    background-color: rgba(0, 11, 71, 0.8);
     color: white;
     text-align: center;
+    font-size: 15px;
+}
+
+.container {
+    margin: 0 auto;
+    margin-top: 43px;
+    margin-bottom: 20px;
+}
+
+.loginBox {
+    border: 2px solid rgb(75, 143, 199);
+    border-radius: 10px;
+    padding: 10px;
+    padding-bottom: 10px;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    width: 500px;
+}
+
+.dHead {
+    width: 80%;
+    margin-left: 10%;
+    color: #fff;
+    background-color: rgba(0, 11, 71, 0.8);
+    border-top: none;
+    border-radius: 20px;
+    text-align: center;
+    padding: 5px;   
+}
+
+audio {
+    width: 50%;
+    background-color: rgba(0,0,0,0) !important;
+}
+
+.uploadBox {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 50px;
+    padding: 20px;
+    font-size: 15px;
+    border: 2px solid orange;
+}
+
+.uploadBox input {
+    height: 30px;
+    margin: 5px;
 }

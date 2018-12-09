@@ -31,7 +31,6 @@ class UploadMusic extends EventEmitter {
 
             var oldpath = files.upload.path;
             newpath += '/' + fields.title + '.mp3';
-            console.log(newpath);
 
             fs.rename(oldpath, newpath, function (err) {
                 if (err) {
