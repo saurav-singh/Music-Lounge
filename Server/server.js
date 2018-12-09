@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var session = require('../Modules/session').session;
-var sessionConfig = require('../.Keys/session.json');
+var sessionConfig = require('../Config/session.json');
 
 //Import and Initialize modules
 var Login = require('../Modules/login');
@@ -10,10 +10,15 @@ var login = new Login.Login();
 var UploadMusic = require('../Modules/uploadMusic');
 var uploadMusic = new UploadMusic.UploadMusic();
 var home = require('../Modules/home');
+var SongController = require('../Modules/songController');
+var songController = new SongController.SongController();
 
 //Setup and start the server
 app.use(express.static("../"));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    parameterLimit: 100000,
+    limit: '50mb', extended: true
+}));
 app.use(bodyParser.json());
 app.use(session(sessionConfig));
 app.listen(8080, function () {
@@ -37,10 +42,15 @@ app.get('/uploadMusic', function (req, res) {
 
 app.post('/upload', function (req, res) {
 
-    uploadMusic.once('d', d => {
-        res.send(d);
-    });
-    uploadMusic.upload(req);
+    console.log('here');
+
+    if (req.session.user) {
+        uploadMusic.once('uploadCheck', d => {
+            res.send(d);
+        });
+        uploadMusic.upload(req, req.session.user);
+    }
+    else res.send('Restricted');
 
 });
 
@@ -82,5 +92,12 @@ app.get('/logout', function (req, res) {
 
     delete req.session.user;
     res.send('success');
+
+});
+
+app.get('/discoverMusic', function(req,res){
+    
+    var list = songController.generateDiscover();
+    res.send(list);
 
 });
