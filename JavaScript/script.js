@@ -14,7 +14,7 @@ function render(path) {
         type: 'GET',
         url: path
     }).then(d => {
-        $("#content").html(d);
+        $('#content').html(d);
         discoverMusic();
     });
 
@@ -28,17 +28,24 @@ function discoverMusic() {
         url: '\discoverMusic'
     }).then(data => {
 
-        var list = "<ul>";
+        var list = '<ul>';
 
         data.forEach(d => {
             var user = Object.keys(d)[0];
             var song = d[user];
-            list += "<li>" + song + "by - " + user + "<button>play</button></li>";
+            var id = song[song.length - 1];
+            song = song.slice(0, song.length - 4);
+
+            list += '<li>';
+            list += song + ' -------- Artist: ' + user;
+            list += '<button onclick=playMusic(' + id + ')>Play</button>';
+            list += '</li>';
         });
 
-        list += "</ul>";
+        list += '</ul>';
 
-        $("#songList").html(list);
+        // $('#songList').html(list);
+        document.getElementById("songList").innerHTML = list;
     });
 }
 
@@ -58,8 +65,8 @@ function switchAuth() {
 
 function login() {
 
-    var username = $("#username").val();
-    var password = hash($("#password").val());
+    var username = $('#username').val();
+    var password = hash($('#password').val());
 
     input = { username: username, password: password };
 
@@ -76,8 +83,8 @@ function login() {
 }
 
 function register() {
-    var username = $("#username").val();
-    var password = hash($("#password").val());
+    var username = $('#username').val();
+    var password = hash($('#password').val());
 
     input = { username: username, password: password };
 
@@ -115,4 +122,15 @@ function uploadMusic() {
 
 function upload() {
     $('#musicForm').submit();
+}
+
+function playMusic(q) {
+
+    $.ajax({
+        type: 'GET', url: '/getSongById?id=' + q
+    }).then(d => {
+        var player = "<audio controls autoplay id=player><source type=audio/mpeg";
+        player += " src=" + d + "> Not Supported... </audio>";
+        $('#nowPlaying').html(player);
+    });
 }

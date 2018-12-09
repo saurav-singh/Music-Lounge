@@ -42,8 +42,6 @@ app.get('/uploadMusic', function (req, res) {
 
 app.post('/upload', function (req, res) {
 
-    console.log('here');
-
     if (req.session.user) {
         uploadMusic.once('uploadCheck', d => {
             res.send(d);
@@ -99,5 +97,13 @@ app.get('/discoverMusic', function(req,res){
     
     var list = songController.generateDiscover();
     res.send(list);
+
+});
+
+app.get('/getSongById', function(req,res){
+
+    var id = req.query.id;
+    var path = songController.getSongByID(id);
+    res.send(path);
 
 });

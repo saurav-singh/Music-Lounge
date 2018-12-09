@@ -17,6 +17,7 @@ class SongController extends EventEmitter {
     populate() {
         var self = this;
         var userFiles = fs.readdirSync(this.songPath);
+        var id=1;
 
         userFiles.forEach((d, i) => {
             //Create json array for every user
@@ -26,13 +27,13 @@ class SongController extends EventEmitter {
             var songs = fs.readdirSync(path);
             //Insert song into their respective user's array
             songs.forEach(s => {
+                //Remove .mp3
+                s = s.slice(0,s.length-4);
                 self.userSong[i][d].push(s)
-                self.songList.push({ [d]: s });
+                self.songList.push({ [d]: s+id });
+                id++;
             });
-
         });
-
-        this.generateDiscover();
 
     }
 
@@ -41,19 +42,36 @@ class SongController extends EventEmitter {
         return this.userSong;
     }
 
-    getMusicOf(user) {
+    getSongByUser(user) {
 
+        var list = [];
         //Return array of songs by the user
         this.userSong.forEach((d) => {
             var usr = Object.keys(d)[0];
-            if (user == usr) {
-                return (d[user]);
+            if(user == usr){
+                list = d[user];
             }
         });
-        //Return null if not found
-        return null;
+
+        return list;
     }
 
+    getSongByID(id) {
+
+        var path = null;
+
+        for (var i in this.songList){
+            var user = Object.keys(this.songList[i]);
+            var song = this.songList[i][user];
+            var id2 = song[song.length-1];
+            if(id == id2){
+                song = song.slice(0,song.length-1)+'.mp3';
+                path = this.songPath+'/'+user+'/'+song;
+            }
+        }
+
+        return path;
+    }
     generateDiscover() {
 
         if (this.songList.length < 10)
@@ -65,9 +83,7 @@ class SongController extends EventEmitter {
             list = list.map(d => this.songList[d]);
             return list;
         }
-
     }
-
 
 }
 

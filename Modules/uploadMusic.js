@@ -28,8 +28,10 @@ class UploadMusic extends EventEmitter {
             fs.mkdirSync(newpath);
 
         form.parse(f, function (err, fields, files) {
+
             var oldpath = files.upload.path;
-            newpath += '/' + files.upload.name;
+            newpath += '/' + fields.title + '.mp3';
+            console.log(newpath);
 
             fs.rename(oldpath, newpath, function (err) {
                 if (err) {
