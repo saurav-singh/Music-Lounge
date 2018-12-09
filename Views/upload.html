@@ -1,8 +1,8 @@
 <div class="container">
 
-    <form action="/upload" enctype="multipart/form-data" method="post">
+    <form action="/upload" enctype="multipart/form-data" method="post" id="musicForm">
         <input type="file" name="upload" multiple="multiple"><br>
-        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Upload">
+        <button onclick="upload()">Upload</button>
     </form>
 
 </div>

@@ -2,7 +2,7 @@
 var fs = require('fs');
 var EventEmitter = require('events').EventEmitter;
 var mysql = require('mysql');
-var dbconfig = require('../.Keys/database.json');
+var dbconfig = require('../Config/database.json');
 
 //Create and connect to mysql database
 var connection = mysql.createConnection(dbconfig);

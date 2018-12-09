@@ -1,0 +1,6 @@
+{
+    "cookieName": "session",
+    "secret": "s3cr37", 
+    "duration": 1800000,
+    "activeDuration": 300000
+}

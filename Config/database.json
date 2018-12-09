@@ -1,0 +1,6 @@
+{
+    "host": "localhost",
+    "user": "root",
+    "password": "passw0rd!",
+    "database": "music_lounge"
+}

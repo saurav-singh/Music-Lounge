@@ -17,20 +17,26 @@ class UploadMusic extends EventEmitter {
         return (header + body);
     }
 
-    upload(f) {
+    upload(f, user) {
 
         var self = this;
         var form = new formidable.IncomingForm();
 
+        var newpath = '../Assets/MusicLibrary/' + user;
+
+        if (!fs.existsSync(newpath))
+            fs.mkdirSync(newpath);
+
         form.parse(f, function (err, fields, files) {
             var oldpath = files.upload.path;
-            var newpath = '../Assets/MusicLibrary/' + files.upload.name;
+            newpath += '/' + files.upload.name;
+
             fs.rename(oldpath, newpath, function (err) {
                 if (err) {
                     console.log(err);
-                    self.emit('d', "fail");
+                    self.emit('uploadCheck', "fail");
                 }
-                self.emit('d', "success");
+                self.emit('uploadCheck', "success");
             });
         });
 

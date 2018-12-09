@@ -9,13 +9,37 @@ $(document).ready(function () {
 });
 
 function render(path) {
+
     $.ajax({
         type: 'GET',
         url: path
     }).then(d => {
         $("#content").html(d);
+        discoverMusic();
     });
 
+
+
+}
+
+function discoverMusic() {
+    $.ajax({
+        type: 'GET',
+        url: '\discoverMusic'
+    }).then(data => {
+
+        var list = "<ul>";
+
+        data.forEach(d => {
+            var user = Object.keys(d)[0];
+            var song = d[user];
+            list += "<li>" + song + "by - " + user + "<button>play</button></li>";
+        });
+
+        list += "</ul>";
+
+        $("#songList").html(list);
+    });
 }
 
 function authPage() {
@@ -60,7 +84,7 @@ function register() {
     $.ajax({
         type: 'POST', url: '/register', data: input
     }).then(d => {
-        console.log(d.code);
+
         if (d.code == 'ER_DUP_ENTRY')
             alert('Username already exists, please enter a different username.');
         else if (d) {
@@ -83,4 +107,12 @@ function logout() {
             alert('Oops.. something went wrong!');
     });
 
+}
+
+function uploadMusic() {
+    render('/uploadMusic');
+}
+
+function upload() {
+    $('#musicForm').submit();
 }
