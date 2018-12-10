@@ -24,8 +24,46 @@ function renderAuth(path) {
     });
 }
 
+function renderArtist(path) {
+    $.ajax({
+        type: 'GET', url: path
+    }).then(d => {
+        $('#content').html(d[0]);
+		$('#name').html(d[1]);
+		$('#personalInformation').html(d[2]);
+		$('#following').html(d[3]);
+		$('#followers').html(d[4]);
+		
+		 var list = '<table class=\'ui selectable table\'>';
+        list += '<thead><tr><th>Song Title</th><th> Artist </th>';
+        list += '<th class=\'right aligned\'></th></tr><tbody>';
+
+        d[5].forEach(x => {
+            var song = x;
+            var id = song;
+
+            list += '<tr>';
+            list += '<td>' + song + '</td>';
+            list += '<td>' + d[1] + '</td>';
+            list += '<td class=\'right aligned\'>';
+            list += '<div class=\'ui vertical labeled icon buttons\'>'
+            list += '<button class=\'ui orange button\' onclick=\'playMusic(' + id + ')\'><i class="play icon"></i>';
+            list += 'Play </button></div</td></tr>';
+
+        });
+
+        list += '</table>';
+
+        $('#songList').html(list);
+    });
+}
+
 function home() {
     render('/home');
+}
+
+function profile() {
+	renderArtist('/getProfilePage');
 }
 
 function discoverMusic() {
@@ -144,4 +182,8 @@ function playMusic(q) {
         player += " src=\'" + d + "\'> Not Supported... </audio>";
         $('#nowPlaying').html(player);
     });
+}
+
+function getArtistPage(q) {
+	render('/getArtistPage?artist=' + q);
 }

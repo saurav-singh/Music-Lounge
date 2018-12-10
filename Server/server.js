@@ -12,6 +12,8 @@ var uploadMusic = new UploadMusic.UploadMusic();
 var home = require('../Modules/home');
 var SongController = require('../Modules/songController');
 var songController = new SongController.SongController();
+var ProfileController = require('../Modules/profileController');
+var profileController = new ProfileController.ProfileController();
 
 //Setup and start the server
 app.use(express.static("../"));
@@ -107,4 +109,32 @@ app.get('/getSongById', function(req,res){
     var path = songController.getSongByID(id);
     res.send(path);
 
+});
+
+//gets profile of requested artist
+app.get('/getProfilePage', function(req,res) {
+	
+	var artist = req.session.user;
+	var data = []
+	profileController.once('pageCheck', d => {
+		data = d;
+		profileController.once('personalCheck', d => {
+			data.push(d);
+			profileController.once('followingCheck', d => {
+				data.push(d);
+				profileController.once('followerCheck', d => {
+					data.push(d);
+					profileController.once('slCheck', d => {
+						data.push(d);
+						res.send(data);
+					});
+					profileController.populateSongs(artist, songController);
+				});
+				profileController.populateFollowers(artist);
+			});
+			profileController.populateFollowing(artist);
+		});
+		profileController.populatePersonalInfo(artist);
+	});
+	profileController.renderProfileByName(artist);
 });
