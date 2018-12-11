@@ -16,29 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `userTable`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `userTable`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
+CREATE TABLE `userTable` (
   `userID` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(30) NOT NULL,
+  `username` varchar(30) DEFAULT NULL,
   `password` char(65) DEFAULT NULL,
+  `profilePictureLocation` varchar(60) DEFAULT NULL,
+  `genre` varchar(30) DEFAULT NULL,
+  `originCity` varchar(50) DEFAULT NULL,
+  `activeSince` year(4) DEFAULT NULL,
   PRIMARY KEY (`userID`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `userTable`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'teg53','2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'),(2,'teg11','2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'),(5,'teg55','ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb'),(18,'Ss4674','f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `userTable` WRITE;
+/*!40000 ALTER TABLE `userTable` DISABLE KEYS */;
+INSERT INTO `userTable` VALUES (1,'Ss4674','0a8ed01a9c1d3cdb16b21460a3ee8f0823ea5621d5c5faf17bde6a99216ed022','Rock','Rock','Philadelphia',1997),(2,'Metallica','2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824','Metal','Metal','Philadelphia',1970),(4,'Kiss','d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1','DefaultProfile.PNG','Rock n\' Roll','New York',1973);
+/*!40000 ALTER TABLE `userTable` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
