@@ -15,7 +15,6 @@ connection.connect(function (err) {
         console.log("Successfully connected to database..");
 })
 
-//create a dom parser
 
 class ProfileController extends EventEmitter {
 
@@ -81,17 +80,12 @@ class ProfileController extends EventEmitter {
 			}
 		});
 	}
-<<<<<<< HEAD
-	populateFollowing(usrID) {
-		console.log(usrID);
-=======
+
 	populateFollowing(username) {
-		//var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribed = users.userID AND users.username ='+connection.escape(usrID); 
 		
 		var q = 'SELECT subscribedto FROM subscriptions, userTable WHERE subscribed = userTable.userID AND userTable.username = '+connection.escape(username);
->>>>>>> 8037082037eba89221423bf78dd949134f3a219e
 		var self = this;
-		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribed=t1.userID';
+		//var q = 'WITH t1 AS (SELECT userID FROM userTable WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, userTable, t1 WHERE subscriptions.subscribed=t1.userID';
 		
 		connection.query(q, function (err, rows, fields) {
 			if (err) {
@@ -116,15 +110,11 @@ class ProfileController extends EventEmitter {
 	}
 					
 		
-<<<<<<< HEAD
-	populateFollowers(usrID, auth) {
-		console.log(usrID);
-		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribedto=t1.userID';
-=======
+
 	populateFollowers(usrID) {
-		//var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribedto = users.userID AND users.username ='+connection.escape(usrID); 
+		console.log(usrID);
+		//var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribedto=t1.userID';
 		var q = 'SELECT subscribedto FROM subscriptions, userTable WHERE subscribedto = userTable.userID AND userTable.username ='+connection.escape(usrID); 
->>>>>>> 8037082037eba89221423bf78dd949134f3a219e
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {
@@ -155,7 +145,7 @@ class ProfileController extends EventEmitter {
 	}
 	
 	followArtist(toFollow, auth){
-		var q = 'INSERT INTO subscriptions(subscribed, subscribedto) WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM users WHERE username='+connection.escape(toFollow)+') SELECT t1.userID, t2.userID from t1, t2;';
+		var q = 'INSERT INTO subscriptions(subscribed, subscribedto) WITH t1 AS (SELECT userID FROM userTable WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM userTable WHERE username='+connection.escape(toFollow)+') SELECT t1.userID, t2.userID from t1, t2;';
 		var self = this;
 		connection.query(q, function (err, rows, fields) {
 			if (err) {
@@ -168,7 +158,7 @@ class ProfileController extends EventEmitter {
 		});
 	}
 	unfollowArtist(unfollow, auth){
-		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM users WHERE username='+connection.escape(unfollow)+') DELETE subscriptions FROM subscriptions INNER JOIN t1 ON subscribed =t1.userID INNER JOIN t2 ON subscribedto=t2.userID;';
+		var q = 'WITH t1 AS (SELECT userID FROM userTable WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM userTable WHERE username='+connection.escape(unfollow)+') DELETE subscriptions FROM subscriptions INNER JOIN t1 ON subscribed =t1.userID INNER JOIN t2 ON subscribedto=t2.userID;';
 		var self = this;
 		connection.query(q, function (err, rows, fields) {
 			if (err) {
@@ -182,7 +172,7 @@ class ProfileController extends EventEmitter {
 	}
 	
 	followStatus(follow, auth) {
-		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM users WHERE username='+connection.escape(follow)+') SELECT * FROM subscriptions, t1, t2 WHERE subscribed =t1.userID AND subscribedto=t2.userID;';
+		var q = 'WITH t1 AS (SELECT userID FROM userTable WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM userTable WHERE username='+connection.escape(follow)+') SELECT * FROM subscriptions, t1, t2 WHERE subscribed =t1.userID AND subscribedto=t2.userID;';
 		var self = this;
 		connection.query(q, function (err, rows, fields) {
 			if (err) {
