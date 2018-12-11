@@ -183,6 +183,7 @@ function renderArtist(path) {
         list += '</table>';
 
         $('#songList').html(list);
+		getFollowStatus(d[1]);
     });
 }
 
