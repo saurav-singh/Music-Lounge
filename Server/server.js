@@ -120,7 +120,6 @@ app.get('/getArtistPage', function(req,res) {
 	var data = []
 	profileController.once('pageCheck', d => {
 		data = d;
-		console.log(data);
 		if(data[1] == -1){
 			res.send(data);
 		}
