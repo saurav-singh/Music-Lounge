@@ -145,3 +145,29 @@ app.get('/getArtistPage', function(req,res) {
 	});
 	profileController.renderProfileByName(artist, req.session.user);
 });
+
+app.get('/followStatus', function(req, res){
+	if(req.session.user && req.session.user != req.query.artist){
+		profileController.once('fStatus', d => {
+			res.send(d);
+		});
+		profileController.followStatus(req.query.artist, req.session.user)
+	}else{
+		res.send('noAuth');
+	}
+});
+
+app.post('/follow', function(req, res){
+	profileController.once('followCheck', d => {
+		res.send(d);
+	});
+	profileController.followArtist(req.query.artist, req.session.user);
+});
+
+app.post('/unfollow', function(req, res) {
+	profileController.once('unfollowCheck', d => {
+		res.send(d);
+	});
+	profileController.unfollowArtist(req.query.artist, req.session.user);
+});
+

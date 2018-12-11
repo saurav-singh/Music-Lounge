@@ -81,8 +81,9 @@ class ProfileController extends EventEmitter {
 		});
 	}
 	populateFollowing(usrID) {
-		var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribed = users.userID AND users.username ='+connection.escape(usrID); 
+		console.log(usrID);
 		var self = this;
+		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribed=t1.userID';
 		
 		connection.query(q, function (err, rows, fields) {
 			if (err) {
@@ -107,8 +108,9 @@ class ProfileController extends EventEmitter {
 	}
 					
 		
-	populateFollowers(usrID) {
-		var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribedto = users.userID AND users.username ='+connection.escape(usrID); 
+	populateFollowers(usrID, auth) {
+		console.log(usrID);
+		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribedto=t1.userID';
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {
@@ -117,7 +119,7 @@ class ProfileController extends EventEmitter {
 				return err;
 			}
 			else {
-		
+				console.log(rows);
 				var followStr = "<table data-role='table' class='ui-responsive' <tbody><tr>";
 				for(var i=0; i<rows.length; i++){
 					if(i%4==0 && i != 0) {
@@ -136,6 +138,53 @@ class ProfileController extends EventEmitter {
 	populateSongs(usrID, sc){
 		var sl = sc.getSongByUser(usrID);
 		this.emit('slCheck', sl);
+	}
+	
+	followArtist(toFollow, auth){
+		var q = 'INSERT INTO subscriptions(subscribed, subscribedto) WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM users WHERE username='+connection.escape(toFollow)+') SELECT t1.userID, t2.userID from t1, t2;';
+		var self = this;
+		connection.query(q, function (err, rows, fields) {
+			if (err) {
+				console.log('Error' + err);
+				return err;
+			}
+			else {
+				self.emit('followCheck', 'ok');
+			}
+		});
+	}
+	unfollowArtist(unfollow, auth){
+		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM users WHERE username='+connection.escape(unfollow)+') DELETE subscriptions FROM subscriptions INNER JOIN t1 ON subscribed =t1.userID INNER JOIN t2 ON subscribedto=t2.userID;';
+		var self = this;
+		connection.query(q, function (err, rows, fields) {
+			if (err) {
+				console.log('Error' + err);
+				return err;
+			}
+			else {
+				self.emit('unfollowCheck', 'ok');
+			}
+		});
+	}
+	
+	followStatus(follow, auth) {
+		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(auth)+'), t2 AS (SELECT userID FROM users WHERE username='+connection.escape(follow)+') SELECT * FROM subscriptions, t1, t2 WHERE subscribed =t1.userID AND subscribedto=t2.userID;';
+		var self = this;
+		connection.query(q, function (err, rows, fields) {
+			if (err) {
+				console.log('Error' + err);
+				return err;
+			}
+			else {
+				if(rows.length == 0) {
+					// we have not followed this artist
+					self.emit('fStatus', 'notFollowed');
+				}
+				else {
+					self.emit('fStatus', 'followed');
+				}
+			}
+		});
 	}
 }
 	

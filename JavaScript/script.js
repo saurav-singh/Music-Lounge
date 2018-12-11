@@ -160,7 +160,7 @@ function renderArtist(path) {
 			$('#personalInformation').html(d[2]);
 			$('#following').html(d[3]);
 			$('#followers').html(d[4]);
-		
+			
 			var list = '<table class=\'ui selectable table\'>';
 			list += '<thead><tr><th>Song Title</th><th> Artist </th>';
 			list += '<th class=\'right aligned\'></th></tr><tbody>';
@@ -180,9 +180,46 @@ function renderArtist(path) {
 			list += '</table>';
 
         $('#songList').html(list);
+		getFollowStatus(d[1]);
 		}
        });
 }
+
+function getFollowStatus(artist) {
+	$.ajax({
+        type: 'GET', url: '/followStatus?artist='+artist
+    }).then(d => {
+		if(d == 'followed'){
+			$('#followDiv').html('<button class=\'ui orange button\' onclick=unfollow("' + artist + '")>Unfollow</button>');
+		}
+		else if(d == 'notFollowed'){
+			$('#followDiv').html('<button class=\'ui orange button\' onclick=follow("' + artist + '")>Follow</button>');
+		}
+		else {
+			// There is some error or we are not authenticated, so don't show anything
+			$('#followDiv').html("");
+		}
+	});
+}
+
+function follow(artist){
+	$.ajax({
+        type: 'POST', url: '/follow?artist='+artist
+    }).then(d => {
+		getArtistPage(artist);
+	});
+}
+
+function unfollow(artist){
+	$.ajax({
+        type: 'POST', url: '/unfollow?artist='+artist
+    }).then(d => {
+		getArtistPage(artist);
+	});
+}
+		
+			
+			
 
 function profile() {
 	getArtistPage('Self');
