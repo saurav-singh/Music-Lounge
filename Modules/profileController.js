@@ -36,8 +36,9 @@ class ProfileController extends EventEmitter {
 		
 	
 		
-	populatePersonalInfo(usrID) {
-		var q = 'SELECT * FROM userinfo, users WHERE users.username ='+connection.escape(usrID)+'AND userinfo.userID = users.userID'; 
+	populatePersonalInfo(username) {
+		//var q = 'SELECT * FROM userinfo, users WHERE users.username ='+connection.escape(usrID)+'AND userinfo.userID = users.userID'; 
+		var q = 'select * from userTable where username = '+connection.escape(username);
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {
@@ -56,8 +57,10 @@ class ProfileController extends EventEmitter {
 			}
 		});
 	}
-	populateFollowing(usrID) {
-		var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribed = users.userID AND users.username ='+connection.escape(usrID); 
+	populateFollowing(username) {
+		//var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribed = users.userID AND users.username ='+connection.escape(usrID); 
+		
+		var q = 'SELECT subscribedto FROM subscriptions, userTable WHERE subscribed = userTable.userID AND userTable.username = '+connection.escape(username);
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {
@@ -84,7 +87,8 @@ class ProfileController extends EventEmitter {
 					
 		
 	populateFollowers(usrID) {
-		var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribedto = users.userID AND users.username ='+connection.escape(usrID); 
+		//var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribedto = users.userID AND users.username ='+connection.escape(usrID); 
+		var q = 'SELECT subscribedto FROM subscriptions, userTable WHERE subscribedto = userTable.userID AND userTable.username ='+connection.escape(usrID); 
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {

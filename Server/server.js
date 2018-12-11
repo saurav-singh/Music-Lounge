@@ -85,7 +85,7 @@ app.post('/register', function (req, res) {
     login.once('registerCheck', d => {
         res.send(d);
     });
-    login.register(input.username, input.password);
+    login.register(input.username, input.password, input.genre, input.originCity, input.activeSince);
 
 });
 
