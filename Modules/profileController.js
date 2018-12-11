@@ -24,15 +24,39 @@ class ProfileController extends EventEmitter {
         this.ProfilePath = '../Assets/profile.html';
     }
 	
-	renderProfileByName(artist){
+	renderProfileByName(artist, auth){
 		// get the artist profile and all 
-				var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');
-				var html = fs.readFileSync('../Views/profile.html', 'utf8');
-				var footer = fs.readFileSync('../Views/footer.html', 'utf-8');
-				var artname = artist;
-				this.emit('pageCheck', [header+html+footer, artname]);
-					
+		var q = 'SELECT * FROM users WHERE username ='+connection.escape(artist); 
+		var self = this;
+		connection.query(q, function (err, rows, fields) {
+			if (err) {
+				console.log('Error' + err);
+				return err;
 			}
+			else {
+				if(rows.length == 0) {
+					//there is no user
+					if(auth){
+					var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');}
+					else{var header = fs.readFileSync('../Views/headerNoAuth.html', 'utf-8');
+					}	
+					var html = fs.readFileSync('../Views/profileNotFound.html', 'utf8');
+					var footer = fs.readFileSync('../Views/footer.html', 'utf-8');
+					var artname = -1;
+				}
+				else {
+					if(auth){
+					var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');}
+					else{var header = fs.readFileSync('../Views/headerNoAuth.html', 'utf-8');
+					}	
+					var html = fs.readFileSync('../Views/profile.html', 'utf8');
+					var footer = fs.readFileSync('../Views/footer.html', 'utf-8');
+					var artname = rows[0].username;
+				}
+				self.emit('pageCheck', [header+html+footer, artname]);
+			}
+		});
+	}
 		
 	
 		
@@ -115,7 +139,6 @@ class ProfileController extends EventEmitter {
 	
 	populateSongs(usrID, sc){
 		var sl = sc.getSongByUser(usrID);
-		console.log(sl);
 		this.emit('slCheck', sl);
 	}
 }

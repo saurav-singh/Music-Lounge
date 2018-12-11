@@ -33,7 +33,7 @@ app.get('/home', function (req, res) {
     var view = home.render(req.session.user);
     res.send(view);
 
-});
+});     
 
 app.get('/uploadMusic', function (req, res) {
 
@@ -112,19 +112,25 @@ app.get('/getSongById', function(req,res){
 });
 
 //gets profile of requested artist
-app.get('/getProfilePage', function(req,res) {
-	
-	var artist = req.session.user;
+app.get('/getArtistPage', function(req,res) {
+	var artist = req.query.artist;
+	if(artist == 'Self'){
+		artist = req.session.user;
+	}
 	var data = []
 	profileController.once('pageCheck', d => {
 		data = d;
+		if(data[1] == -1){
+			res.send(data);
+		}
+		else {
 		profileController.once('personalCheck', d => {
 			data.push(d);
 			profileController.once('followingCheck', d => {
 				data.push(d);
 				profileController.once('followerCheck', d => {
 					data.push(d);
-					profileController.once('slCheck', d => {
+					profileController.once('slCheck',   d => {
 						data.push(d);
 						res.send(data);
 					});
@@ -135,6 +141,7 @@ app.get('/getProfilePage', function(req,res) {
 			profileController.populateFollowing(artist);
 		});
 		profileController.populatePersonalInfo(artist);
+		}
 	});
-	profileController.renderProfileByName(artist);
+	profileController.renderProfileByName(artist, req.session.user);
 });
