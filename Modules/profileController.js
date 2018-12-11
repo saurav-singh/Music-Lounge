@@ -24,8 +24,9 @@ class ProfileController extends EventEmitter {
     }
 	
 	renderProfileByName(artist, auth){
-		// get the artist profile and all 
-		var q = 'SELECT * FROM users WHERE username ='+connection.escape(artist); 
+		// get the artist profile and all
+		console.log(artist); 
+		var q = 'SELECT * FROM userTable WHERE username ='+connection.escape(artist); 
 		var self = this;
 		connection.query(q, function (err, rows, fields) {
 			if (err) {
@@ -33,6 +34,7 @@ class ProfileController extends EventEmitter {
 				return err;
 			}
 			else {
+				
 				if(rows.length == 0) {
 					//there is no user
 					if(auth){

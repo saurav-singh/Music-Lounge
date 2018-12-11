@@ -1,6 +1,6 @@
 {
     "host": "localhost",
-    "user": "username",
-    "password": "password",
+    "user": "root",
+    "password": "$Pass1@@",
     "database": "music_lounge"
 }
