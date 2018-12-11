@@ -98,8 +98,12 @@ function login() {
 function register() {
     var username = $('#username').val();
     var password = hash($('#password').val());
+	var genre = $('#genre').val();
+	var originCity = $('#originCity').val();
+	var activeSince = $('#activeSince').val();
 
-    input = { username: username, password: password };
+    input = { username: username, password: password, genre:genre, originCity:originCity, activeSince:activeSince};
+	
 
     $.ajax({
         type: 'POST', url: '/register', data: input

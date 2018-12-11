@@ -82,6 +82,7 @@ app.post('/login', function (req, res) {
 app.post('/register', function (req, res) {
 
     var input = req.body;
+	
     login.once('registerCheck', d => {
         res.send(d);
     });
