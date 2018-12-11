@@ -112,12 +112,19 @@ app.get('/getSongById', function(req,res){
 });
 
 //gets profile of requested artist
-app.get('/getProfilePage', function(req,res) {
-	
-	var artist = req.session.user;
+app.get('/getArtistPage', function(req,res) {
+	var artist = req.query.artist;
+	if(artist == 'Self'){
+		artist = req.session.user;
+	}
 	var data = []
 	profileController.once('pageCheck', d => {
 		data = d;
+		console.log(data);
+		if(data[1] == -1){
+			res.send(data);
+		}
+		else {
 		profileController.once('personalCheck', d => {
 			data.push(d);
 			profileController.once('followingCheck', d => {
@@ -135,6 +142,7 @@ app.get('/getProfilePage', function(req,res) {
 			profileController.populateFollowing(artist);
 		});
 		profileController.populatePersonalInfo(artist);
+		}
 	});
 	profileController.renderProfileByName(artist);
 });

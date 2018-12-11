@@ -48,8 +48,6 @@ class SongController extends EventEmitter {
         //Return array of songs by the user
         this.userSong.forEach((d) => {
             var usr = Object.keys(d)[0];
-			console.log(usr);
-			console.log(d);
             if (user == usr) {
                 list = d[user];
             }
