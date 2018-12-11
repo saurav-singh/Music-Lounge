@@ -33,7 +33,7 @@ app.get('/home', function (req, res) {
     var view = home.render(req.session.user);
     res.send(view);
 
-});
+});     
 
 app.get('/uploadMusic', function (req, res) {
 
@@ -130,7 +130,7 @@ app.get('/getArtistPage', function(req,res) {
 				data.push(d);
 				profileController.once('followerCheck', d => {
 					data.push(d);
-					profileController.once('slCheck', d => {
+					profileController.once('slCheck',   d => {
 						data.push(d);
 						res.send(data);
 					});
