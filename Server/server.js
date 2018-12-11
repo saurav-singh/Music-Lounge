@@ -47,7 +47,7 @@ app.post('/upload', function (req, res) {
     if (req.session.user) {
         uploadMusic.once('uploadCheck', d => {
             songController.refresh();
-            res.send(d);
+            res.redirect("http://localhost:8080");
         });
         uploadMusic.upload(req, req.session.user);
     }

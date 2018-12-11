@@ -19,7 +19,6 @@ function renderAuth(path) {
     $.ajax({
         type: 'GET', url: path
     }).then(d => {
-        console.log(d);
         $('#content').html(d);
     });
 }
@@ -40,17 +39,19 @@ function discoverMusic() {
         list += '<th class=\'right aligned\'></th></tr><tbody>';
 
         data.forEach(d => {
+
             var user = Object.keys(d)[0];
             var song = d[user];
-            var id = song[song.length - 1];
-            song = song.slice(0, song.length - 1);
+            var id = song.substring(song.length - 5, song.length);
+            song = song.slice(0, song.length - 5);
+
 
             list += '<tr>';
             list += '<td>' + song + '</td>';
             list += '<td>' + user + '</td>';
             list += '<td class=\'right aligned\'>';
             list += '<div class=\'ui vertical labeled icon buttons\'>'
-            list += '<button class=\'ui orange button\' onclick=\'playMusic(' + id + ')\'><i class="play icon"></i>';
+            list += '<button class=\'ui orange button\' onclick=\'playMusic(\"' + id + '\")\'><i class="play icon"></i>';
             list += 'Play </button></div</td></tr>';
 
         });
@@ -97,12 +98,8 @@ function login() {
 function register() {
     var username = $('#username').val();
     var password = hash($('#password').val());
-    var genre = $('#genre').val();
-    var originCity = $('#originCity').val();
-    var activeSince = $('#activeSince').val();
 
-
-    input = { username: username, password: password, genre : genre, originCity: originCity, activeSince:activeSince };
+    input = { username: username, password: password };
 
     $.ajax({
         type: 'POST', url: '/register', data: input
@@ -150,43 +147,39 @@ function playMusic(q) {
         $('#nowPlaying').html(player);
     });
 }
+
 function renderArtist(path) {
     $.ajax({
         type: 'GET', url: path
     }).then(d => {
-		$('#content').html(d[0]);
-		if(d.length < 5){
-			//did not get a valid user
-		}
-		else {
+        $('#content').html(d[0]);
+        $('#name').html(d[1]);
+        $('#personalInformation').html(d[2]);
+        $('#following').html(d[3]);
+        $('#followers').html(d[4]);
 
-			$('#name').html(d[1]);
-			$('#personalInformation').html(d[2]);
-			$('#following').html(d[3]);
-			$('#followers').html(d[4]);
-			
-			var list = '<table class=\'ui selectable table\'>';
-			list += '<thead><tr><th>Song Title</th><th> Artist </th>';
-			list += '<th class=\'right aligned\'></th></tr><tbody>';
+        var list = '<table class=\'ui selectable table\'>';
+        list += '<thead><tr><th>Song Title</th><th> Artist </th>';
+        list += '<th class=\'right aligned\'></th></tr><tbody>';
 
-			d[5].forEach(x => {
-				var song = x;
-				var id = song;
+        d[5].forEach(x => {
+            var id = x.substring(x.length - 5, x.length);
+            var song = x.slice(0, x.length - 5);
 
-				list += '<tr>';
-				list += '<td>' + song + '</td>';
-				list += '<td>' + d[1] + '</td>';
-				list += '<td class=\'right aligned\'>';
-				list += '<div class=\'ui vertical labeled icon buttons\'>'
-				list += '<button class=\'ui orange button\' onclick=\'playMusic(' + id + ')\'><i class="play icon"></i>';
-				list += 'Play </button></div</td></tr>';
-			});
-			list += '</table>';
+            list += '<tr>';
+            list += '<td>' + song + '</td>';
+            list += '<td>' + d[1] + '</td>';
+            list += '<td class=\'right aligned\'>';
+            list += '<div class=\'ui vertical labeled icon buttons\'>'
+            list += '<button class=\'ui orange button\' onclick=\'playMusic(\"' + id + '\")\'><i class="play icon"></i>';
+            list += 'Play </button></div</td></tr>';
+
+        });
+
+        list += '</table>';
 
         $('#songList').html(list);
-		getFollowStatus(d[1]);
-		}
-       });
+    });
 }
 
 function getFollowStatus(artist) {
@@ -221,9 +214,7 @@ function unfollow(artist){
 		getArtistPage(artist);
 	});
 }
-		
-			
-			
+					
 
 function profile() {
 	getArtistPage('Self');

@@ -29,8 +29,9 @@ class SongController extends EventEmitter {
             songs.forEach(s => {
                 //Remove .mp3
                 s = s.slice(0, s.length - 4);
+                var setID = this.generateID(id);
                 self.userSong[i][d].push(s)
-                self.songList.push({ [d]: s + id });
+                self.songList.push({ [d]: s + setID });
                 id++;
             });
         });
@@ -45,13 +46,13 @@ class SongController extends EventEmitter {
     getSongByUser(user) {
 
         var list = [];
-        //Return array of songs by the user
-        this.userSong.forEach((d) => {
-            var usr = Object.keys(d)[0];
+
+        for (var i in this.songList) {
+            var usr = Object.keys(this.songList[i]);
             if (user == usr) {
-                list = d[user];
+                list.push(this.songList[i][user]);
             }
-        });
+        }
 
         return list;
     }
@@ -63,9 +64,10 @@ class SongController extends EventEmitter {
         for (var i in this.songList) {
             var user = Object.keys(this.songList[i]);
             var song = this.songList[i][user];
-            var id2 = song[song.length - 1];
+            var id2=song.slice(song.length-5,song.length);
+
             if (id == id2) {
-                song = song.slice(0, song.length - 1) + '.mp3';
+                song = song.slice(0, song.length - 5) + '.mp3';
                 path = this.songPath + '/' + user + '/' + song;
             }
         }
@@ -88,6 +90,15 @@ class SongController extends EventEmitter {
 
             return list;
         }
+    }
+
+    generateID(n) {
+        
+        var id = '00000';
+        var l = n.toString().length;
+        id = id.slice(id, id.length - l) + n;
+
+        return id;
     }
 
     refresh() {
