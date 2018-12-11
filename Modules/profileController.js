@@ -24,7 +24,7 @@ class ProfileController extends EventEmitter {
         this.ProfilePath = '../Assets/profile.html';
     }
 	
-	renderProfileByName(artist){
+	renderProfileByName(artist, auth){
 		// get the artist profile and all 
 		var q = 'SELECT * FROM users WHERE username ='+connection.escape(artist); 
 		var self = this;
@@ -36,14 +36,19 @@ class ProfileController extends EventEmitter {
 			else {
 				if(rows.length == 0) {
 					//there is no user
-				
-					var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');
+					if(auth){
+					var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');}
+					else{var header = fs.readFileSync('../Views/headerNoAuth.html', 'utf-8');
+					}	
 					var html = fs.readFileSync('../Views/profileNotFound.html', 'utf8');
 					var footer = fs.readFileSync('../Views/footer.html', 'utf-8');
 					var artname = -1;
 				}
 				else {
-					var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');
+					if(auth){
+					var header = fs.readFileSync('../Views/headerAuth.html', 'utf-8');}
+					else{var header = fs.readFileSync('../Views/headerNoAuth.html', 'utf-8');
+					}	
 					var html = fs.readFileSync('../Views/profile.html', 'utf8');
 					var footer = fs.readFileSync('../Views/footer.html', 'utf-8');
 					var artname = rows[0].username;

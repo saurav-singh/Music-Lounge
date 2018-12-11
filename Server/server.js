@@ -143,5 +143,5 @@ app.get('/getArtistPage', function(req,res) {
 		profileController.populatePersonalInfo(artist);
 		}
 	});
-	profileController.renderProfileByName(artist);
+	profileController.renderProfileByName(artist, req.session.user);
 });
