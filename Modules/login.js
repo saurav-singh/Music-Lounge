@@ -14,7 +14,6 @@ connection.connect(function (err) {
 })
 
 class Login extends EventEmitter {
-
     constructor() {
         super();
     }
@@ -37,24 +36,72 @@ class Login extends EventEmitter {
         return (header + body + footer);
     }
 
-    register(username, password) {
 
-        var q = 'insert into users (username, password) values (' + connection.escape(username) + ',' + connection.escape(password) + ')';
-        var self = this;
+
+    register(username, password, genre, originCity, activeSince) {
+        var profilePictureLocation = "DefaultProfile.PNG";
+
+        console.log(username, + " " + password + " " + profilePictureLocation + " " + genre + " " + originCity + " " + activeSince);
+       
+      //  var q = 'insert into users (username, password) values (' + connection.escape(username) + ',' + connection.escape(password) + ')';
+      var q = 'insert into userTable (username, password, profilePictureLocation, genre, originCity, activeSince) values (' + connection.escape(username) + ',' + connection.escape(password) + ',' + connection.escape(profilePictureLocation) + ',' + connection.escape(genre) + ',' + connection.escape(originCity) + ',' + connection.escape(activeSince) + ')';
+         var self = this;
+
         connection.query(q, function (err, result) {
             if (err) {
                 console.log('Error' + err);
-                self.emit('registerCheck',err);
+                self.emit('registerCheck', err);
             }
-            else
+            else {
                 self.emit('registerCheck', true);
+                //self.register_remaining(username, genre, originCity, activeSince);
+            }
         });
 
     }
 
+    //register the remaining data to the uerinfo table
+    register_remaining(username, genre, originCity, activeSince) {
+
+        var userID = this.getUserID(username);
+        var profilePictureLocation = "";
+        console.log("userId : " + userID);
+
+        var q = 'insert into userinfo (userID, profilePictureLocation, genre, originCity, activeSince) values (' +
+            connection.escape(userID) + ',' + connection.escape(profilePictureLocation) + ',' + connection.escape(genre) + ',' + connection.escape(originCity) + ',' + connection.escape(activeSince) + ')';
+
+
+        var self = this;
+        connection.query(q, function (err, result) {
+            if (err) {
+                console.log('Error' + err);
+                self.emit('registerCheck', err);
+            }
+            else{
+                self.emit('registerCheck', true);
+                console.log("Registered!!")
+            }
+           
+        });
+    }
+
+    //Get the userID for the username
+    getUserID(username) {
+
+        var sql = "select userID from users where username = " + connection.escape(username);
+        connection.query(sql,
+            function (err, rows, fields) {
+                if (err) {
+                    console.log("Error during querying process");
+                } else {
+                    //console.log("Result : ", rows[0].userID);
+                    return rows[0].userID;
+                }
+            });
+    }
     login(username, password) {
 
-        var q = 'select * from users where username=' + connection.escape(username) + ' and password=' + connection.escape(password);
+        var q = 'select * from userTable where username=' + connection.escape(username) + ' and password=' + connection.escape(password);
         var self = this;
         connection.query(q, function (err, rows, fields) {
             if (err) {

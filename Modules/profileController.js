@@ -60,8 +60,9 @@ class ProfileController extends EventEmitter {
 		
 	
 		
-	populatePersonalInfo(usrID) {
-		var q = 'SELECT * FROM userinfo, users WHERE users.username ='+connection.escape(usrID)+'AND userinfo.userID = users.userID'; 
+	populatePersonalInfo(username) {
+		//var q = 'SELECT * FROM userinfo, users WHERE users.username ='+connection.escape(usrID)+'AND userinfo.userID = users.userID'; 
+		var q = 'select * from userTable where username = '+connection.escape(username);
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {
@@ -80,8 +81,15 @@ class ProfileController extends EventEmitter {
 			}
 		});
 	}
+<<<<<<< HEAD
 	populateFollowing(usrID) {
 		console.log(usrID);
+=======
+	populateFollowing(username) {
+		//var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribed = users.userID AND users.username ='+connection.escape(usrID); 
+		
+		var q = 'SELECT subscribedto FROM subscriptions, userTable WHERE subscribed = userTable.userID AND userTable.username = '+connection.escape(username);
+>>>>>>> 8037082037eba89221423bf78dd949134f3a219e
 		var self = this;
 		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribed=t1.userID';
 		
@@ -108,9 +116,15 @@ class ProfileController extends EventEmitter {
 	}
 					
 		
+<<<<<<< HEAD
 	populateFollowers(usrID, auth) {
 		console.log(usrID);
 		var q = 'WITH t1 AS (SELECT userID FROM users WHERE username ='+connection.escape(usrID)+')SELECT username FROM subscriptions, users, t1 WHERE subscriptions.subscribedto=t1.userID';
+=======
+	populateFollowers(usrID) {
+		//var q = 'SELECT subscribedto FROM subscriptions, users WHERE subscribedto = users.userID AND users.username ='+connection.escape(usrID); 
+		var q = 'SELECT subscribedto FROM subscriptions, userTable WHERE subscribedto = userTable.userID AND userTable.username ='+connection.escape(usrID); 
+>>>>>>> 8037082037eba89221423bf78dd949134f3a219e
 		var self = this;
 		
 		connection.query(q, function (err, rows, fields) {
